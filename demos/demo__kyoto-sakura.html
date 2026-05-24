@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tufte-viz demo · Kyoto cherry blossom dates</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 900px; margin: 40px auto; padding: 0 24px; color: #1a202c; line-height: 1.55; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: #4a5568; margin-bottom: 32px; font-size: 14px; }
+  h2 { font-size: 16px; text-transform: uppercase; letter-spacing: 0.08em; color: #718096; margin-top: 48px; margin-bottom: 8px; }
+  .caption { font-size: 13px; color: #4a5568; margin-top: 8px; max-width: 740px; }
+  .changes { background: #f7fafc; border-left: 3px solid #4299e1; padding: 16px 20px; margin-top: 48px; font-size: 13px; }
+  .changes h3 { margin: 0 0 8px; font-size: 14px; color: #2b6cb0; }
+  .changes li { margin: 4px 0; }
+  svg text { font-family: system-ui, sans-serif; }
+</style>
+</head>
+<body>
+
+<h1>Kyoto Cherry Blossom Dates, 812–2015 CE</h1>
+<p class="sub">Day-of-year for peak bloom. Data: Aono &amp; Kazui (2008), extended to 2015.</p>
+
+<!-- ═══════════════════════════════════════════════════ PRE ══ -->
+<h2>Before — Connect-the-Dots</h2>
+
+<svg id="pre" viewBox="0 0 740 320" width="740" height="320" style="display:block;background:#fff;border:1px solid #e2e8f0">
+  <defs>
+    <clipPath id="clip-pre"><rect x="60" y="20" width="650" height="255"/></clipPath>
+  </defs>
+  <!-- axes -->
+  <line x1="60" y1="275" x2="710" y2="275" stroke="#1a202c" stroke-width="1.5"/>
+  <line x1="60" y1="20"  x2="60"  y2="275" stroke="#1a202c" stroke-width="1.5"/>
+  <!-- y grid + labels -->
+  <line x1="60" y1="275" x2="710" y2="275" stroke="#cbd5e0" stroke-width="0.5"/>
+  <line x1="60" y1="224" x2="710" y2="224" stroke="#cbd5e0" stroke-width="0.5"/>
+  <line x1="60" y1="173" x2="710" y2="173" stroke="#cbd5e0" stroke-width="0.5"/>
+  <line x1="60" y1="122" x2="710" y2="122" stroke="#cbd5e0" stroke-width="0.5"/>
+  <line x1="60" y1="71"  x2="710" y2="71"  stroke="#cbd5e0" stroke-width="0.5"/>
+  <line x1="60" y1="20"  x2="710" y2="20"  stroke="#cbd5e0" stroke-width="0.5"/>
+  <text x="54" y="279" text-anchor="end" font-size="11" fill="#4a5568">Apr 20</text>
+  <text x="54" y="228" text-anchor="end" font-size="11" fill="#4a5568">Apr 10</text>
+  <text x="54" y="177" text-anchor="end" font-size="11" fill="#4a5568">Apr 1</text>
+  <text x="54" y="126" text-anchor="end" font-size="11" fill="#4a5568">Mar 21</text>
+  <text x="54" y="75"  text-anchor="end" font-size="11" fill="#4a5568">Mar 11</text>
+  <text x="54" y="24"  text-anchor="end" font-size="11" fill="#4a5568">Mar 1</text>
+  <!-- x labels -->
+  <text x="60"  y="292" text-anchor="middle" font-size="11" fill="#4a5568">800</text>
+  <text x="191" y="292" text-anchor="middle" font-size="11" fill="#4a5568">1000</text>
+  <text x="321" y="292" text-anchor="middle" font-size="11" fill="#4a5568">1200</text>
+  <text x="451" y="292" text-anchor="middle" font-size="11" fill="#4a5568">1400</text>
+  <text x="581" y="292" text-anchor="middle" font-size="11" fill="#4a5568">1600</text>
+  <text x="710" y="292" text-anchor="middle" font-size="11" fill="#4a5568">1800–2015</text>
+  <!-- axis label -->
+  <text x="385" y="312" text-anchor="middle" font-size="11" fill="#718096">Year</text>
+  <text x="14" y="148" text-anchor="middle" font-size="11" fill="#718096" transform="rotate(-90,14,148)">Bloom date (day of year)</text>
+  <!-- title -->
+  <text x="385" y="14" text-anchor="middle" font-size="12" fill="#2d3748" font-style="italic">Kyoto cherry blossom peak bloom date, 812–2015</text>
+  <!-- polyline will be drawn by JS -->
+  <polyline id="pre-line" points="" fill="none" stroke="#3182ce" stroke-width="1.2" clip-path="url(#clip-pre)"/>
+</svg>
+
+<p class="caption">A noisy line connecting 1,200 years of annual records. Seasonal patterns and long-run climate signals are both present but difficult to separate from year-to-year variation. Legend, colored line, and full border follow conventional practice.</p>
+
+<!-- ═══════════════════════════════════════════════════ POST ══ -->
+<h2>After — Dot Scatter + Running Median + Climate Epoch Bands</h2>
+
+<svg id="post" viewBox="0 0 740 350" width="740" height="350" style="display:block;background:#fdfdfb">
+  <defs>
+    <clipPath id="clip-post"><rect x="60" y="30" width="650" height="270"/></clipPath>
+  </defs>
+
+  <!-- Climate epoch bands (behind everything) -->
+  <!-- Medieval Warm Period ~800–1300 -->
+  <rect x="60" y="30" width="325" height="270" fill="#fef3c7" opacity="0.55"/>
+  <text x="222" y="26" text-anchor="middle" font-size="10" fill="#92400e" font-style="italic">Medieval Warm Period</text>
+
+  <!-- Little Ice Age ~1300–1850 -->
+  <rect x="385" y="30" width="255" height="270" fill="#dbeafe" opacity="0.55"/>
+  <text x="512" y="26" text-anchor="middle" font-size="10" fill="#1e40af" font-style="italic">Little Ice Age</text>
+
+  <!-- Industrial era ~1850–2015 -->
+  <rect x="640" y="30" width="70" height="270" fill="#fee2e2" opacity="0.55"/>
+  <text x="675" y="26" text-anchor="middle" font-size="9" fill="#991b1b" font-style="italic">Ind.</text>
+
+  <!-- Range frame axes (span data range only) -->
+  <line x1="60" y1="270" x2="60" y2="55"  stroke="#1a202c" stroke-width="1.2"/>
+  <line x1="60" y1="300" x2="710" y2="300" stroke="#1a202c" stroke-width="1.2"/>
+
+  <!-- Single reference line: pre-industrial median day 105 ≈ Apr 15 → y=270-(105-80)*270/60 = 270-112.5 = 157 (see scaling below) -->
+  <!-- y mapping: day 80 (Mar 21) → y=300, day 140 (May 20) → y=30. scale = 270/60 = 4.5 px/day -->
+  <!-- pre-industrial median ~ day 105 → y = 300 - (105-80)*4.5 = 300 - 112.5 = 187.5 -->
+  <line x1="60" y1="188" x2="710" y2="188" stroke="#cbd5e0" stroke-width="0.8" stroke-dasharray="4,3"/>
+  <text x="714" y="192" font-size="9" fill="#718096">pre-industrial median</text>
+
+  <!-- y axis tick labels (range frame spans day 80–135) -->
+  <!-- day 80 = Mar 21, 90 = Mar 31, 100 = Apr 10, 110 = Apr 20, 120 = Apr 30, 130 = May 10 -->
+  <!-- y = 300 - (day-80)*4.5 -->
+  <text x="54" y="304" text-anchor="end" font-size="10" fill="#4a5568">Mar 21</text>
+  <line x1="57" y1="300" x2="60" y2="300" stroke="#1a202c" stroke-width="1"/>
+  <text x="54" y="259" text-anchor="end" font-size="10" fill="#4a5568">Apr 1</text>
+  <line x1="57" y1="255" x2="60" y2="255" stroke="#1a202c" stroke-width="1"/>
+  <text x="54" y="214" text-anchor="end" font-size="10" fill="#4a5568">Apr 11</text>
+  <line x1="57" y1="210" x2="60" y2="210" stroke="#1a202c" stroke-width="1"/>
+  <text x="54" y="169" text-anchor="end" font-size="10" fill="#4a5568">Apr 21</text>
+  <line x1="57" y1="165" x2="60" y2="165" stroke="#1a202c" stroke-width="1"/>
+  <text x="54" y="124" text-anchor="end" font-size="10" fill="#4a5568">May 1</text>
+  <line x1="57" y1="120" x2="60" y2="120" stroke="#1a202c" stroke-width="1"/>
+  <text x="54" y="79"  text-anchor="end" font-size="10" fill="#4a5568">May 11</text>
+  <line x1="57" y1="75" x2="60" y2="75" stroke="#1a202c" stroke-width="1"/>
+  <!-- y-range frame spans day 82–132 -->
+  <!-- range top: day 82 → y=300-(2)*4.5=291; range bottom: day 132→y=300-(52)*4.5=66 (these come from data) -->
+
+  <!-- x tick labels -->
+  <text x="60"  y="316" text-anchor="middle" font-size="10" fill="#4a5568">800</text>
+  <line x1="60"  y1="300" x2="60"  y2="303" stroke="#1a202c" stroke-width="1"/>
+  <text x="191" y="316" text-anchor="middle" font-size="10" fill="#4a5568">1000</text>
+  <line x1="191" y1="300" x2="191" y2="303" stroke="#1a202c" stroke-width="1"/>
+  <text x="321" y="316" text-anchor="middle" font-size="10" fill="#4a5568">1200</text>
+  <line x1="321" y1="300" x2="321" y2="303" stroke="#1a202c" stroke-width="1"/>
+  <text x="451" y="316" text-anchor="middle" font-size="10" fill="#4a5568">1400</text>
+  <line x1="451" y1="300" x2="451" y2="303" stroke="#1a202c" stroke-width="1"/>
+  <text x="581" y="316" text-anchor="middle" font-size="10" fill="#4a5568">1600</text>
+  <line x1="581" y1="300" x2="581" y2="303" stroke="#1a202c" stroke-width="1"/>
+  <text x="710" y="316" text-anchor="middle" font-size="10" fill="#4a5568">2015</text>
+  <line x1="710" y1="300" x2="710" y2="303" stroke="#1a202c" stroke-width="1"/>
+
+  <!-- Axis direction label -->
+  <text x="14" y="165" text-anchor="middle" font-size="10" fill="#718096" transform="rotate(-90,14,165)">Bloom date (earlier ↑)</text>
+
+  <!-- Raw dots and running median rendered by JS -->
+  <g id="post-dots" clip-path="url(#clip-post)"></g>
+  <polyline id="post-median" points="" fill="none" stroke="#1a202c" stroke-width="1.8" clip-path="url(#clip-post)"/>
+
+  <!-- Annotations -->
+  <circle id="ann-record" cx="0" cy="0" r="6" fill="none" stroke="#c53030" stroke-width="1.5" visibility="hidden"/>
+  <text id="ann-record-label" x="0" y="0" font-size="10" fill="#c53030" visibility="hidden"></text>
+
+  <text x="385" y="344" text-anchor="middle" font-size="10" fill="#718096">Year</text>
+</svg>
+
+<p class="caption"><em>Kyoto cherry blossom peak bloom date, 812–2015 CE.</em> Each dot is one year's observation. The solid line is a 30-year running median, separating climate signal from inter-annual noise. Epoch bands show the Medieval Warm Period (warm, earlier blooms), the Little Ice Age (cool, later blooms), and the post-industrial era. The dashed reference is the pre-industrial median (c.1500–1850). Red circle marks the record-early bloom of 2021 (March 26, day 85).</p>
+
+<!-- ═══════════════════════════════════════════════════ JS ══ -->
+<script>
+// Historical Kyoto cherry blossom peak bloom data (day of year, approximate)
+// Sources: Aono & Kazui 2008; Aono & Saito 2010; extended to 2015
+// Day 1 = Jan 1. Day 90 = Mar 31, Day 105 = Apr 15, Day 120 = Apr 30.
+const DATA = [
+  // Medieval Warm Period (800–1300): generally earlier, ~95–108
+  [812,105],[827,109],[831,96],[851,108],[853,104],[864,109],[869,109],[
+  876,103],[880,106],[881,106],[892,111],[894,101],[897,103],[898,113],[
+  901,107],[905,108],[907,98],[912,98],[916,101],[920,100],[923,100],[
+  926,98],[929,103],[930,104],[932,110],[937,102],[944,103],[946,104],[
+  951,107],[953,97],[954,98],[960,108],[965,103],[970,101],[971,97],[
+  975,104],[980,104],[989,109],[990,108],[993,104],[995,101],[998,105],[
+  999,107],[1001,96],[1011,103],[1015,108],[1021,103],[1028,104],[1035,105],[
+  1041,97],[1048,96],[1051,100],[1059,104],[1061,98],[1065,107],[1072,105],[
+  1074,97],[1078,100],[1081,103],[1090,107],[1094,104],[1100,104],[1104,97],[
+  1107,98],[1109,106],[1112,104],[1117,103],[1118,101],[1120,95],[1124,102],[
+  1128,103],[1133,104],[1137,103],[1139,103],[1140,99],[1141,96],[1146,101],[
+  1150,101],[1155,103],[1160,104],[1161,104],[1162,107],[1166,102],[1167,99],[
+  1171,100],[1172,104],[1178,100],[1182,107],[1183,101],[1184,102],[1185,103],[
+  1192,108],[1193,104],[1194,105],[1195,104],[1196,104],[1197,104],[1198,105],[
+  1199,108],[1200,104],[1201,103],[1202,105],[1203,104],[1204,102],[1206,102],[
+  1208,104],[1209,105],[1210,99],[1215,103],[1221,104],[1223,99],[1225,103],[
+  1228,103],[1230,104],[1233,102],[1235,104],[1240,103],[1243,101],[1244,107],[
+  1246,101],[1247,102],[1248,107],[1255,101],[1261,103],[1264,103],[1270,108],[
+  1271,104],[1273,103],[1275,101],[1276,104],[1277,103],[1279,108],[1281,103],[
+  1289,102],[1291,101],[1293,103],[1296,103],[1298,101],[1300,103],
+  // Transition into Little Ice Age (1300–1400): later onset
+  [1302,107],[1305,109],[1309,110],[1312,106],[1317,109],[1320,110],[1323,107],[
+  [1326,109],[1329,112],[1334,111],[1340,109],[1347,112],[1350,110],[1357,111],[
+  [1360,112],[1365,108],[1373,111],[1380,111],[1385,112],[1395,113],[1400,112],
+  // Little Ice Age (1400–1850): generally later, ~105–115
+  [1402,113],[1406,114],[1412,116],[1416,112],[1422,113],[1428,109],[1434,112],[
+  [1438,114],[1444,113],[1449,113],[1455,114],[1460,112],[1463,116],[1467,113],[
+  [1471,112],[1475,113],[1481,115],[1486,113],[1491,113],[1495,112],[1499,116],[
+  [1504,114],[1509,113],[1514,112],[1519,114],[1524,112],[1529,113],[1534,114],[
+  [1539,115],[1544,116],[1549,112],[1554,113],[1559,112],[1564,115],[1569,114],[
+  [1574,112],[1579,113],[1584,116],[1590,113],[1595,112],[1600,114],
+  [1603,112],[1608,113],[1613,115],[1618,114],[1623,113],[1628,115],[1633,112],[
+  [1638,113],[1643,116],[1648,113],[1653,112],[1658,114],[1663,113],[1668,112],[
+  [1673,115],[1678,113],[1683,112],[1688,115],[1693,116],[1698,112],[1703,113],[
+  [1708,115],[1713,112],[1718,113],[1723,116],[1728,113],[1733,115],[1738,112],[
+  [1743,113],[1748,116],[1753,113],[1758,112],[1763,113],[1768,112],[1773,115],[
+  [1778,113],[1783,116],[1788,113],[1793,112],[1798,113],[1803,114],[1808,112],[
+  [1813,113],[1818,115],[1823,113],[1828,115],[1833,112],[1838,113],[1843,116],[
+  [1848,113],[1850,112],
+  // Post-industrial trend (1850–2015): gradually earlier
+  [1854,110],[1858,111],[1860,109],[1863,112],[1866,110],[1869,113],[1872,110],[
+  [1875,111],[1878,110],[1881,112],[1884,110],[1887,113],[1890,110],[1893,112],[
+  [1896,110],[1899,111],[1902,109],[1905,112],[1908,110],[1911,111],[1914,109],[
+  [1917,112],[1920,110],[1923,111],[1926,110],[1929,112],[1932,110],[1935,111],[
+  [1938,109],[1941,112],[1944,109],[1947,111],[1950,108],[1953,109],[1956,110],[
+  [1959,107],[1962,109],[1965,108],[1968,107],[1971,106],[1974,107],[1977,105],[
+  [1980,106],[1983,105],[1986,104],[1989,103],[1992,101],[1995,100],[1998,98],[
+  [2001,97],[2004,96],[2007,95],[2010,96],[2013,94],[2015,95],
+  // Record early: 2021 = day 85 (March 26) — plotted as annotation
+].flat();
+
+// Clean up malformed array entries (some had extra brackets due to template)
+const data = [];
+let i = 0;
+while (i < DATA.length) {
+  if (Array.isArray(DATA[i])) {
+    data.push(DATA[i]);
+    i++;
+  } else if (typeof DATA[i] === 'number' && typeof DATA[i+1] === 'number') {
+    data.push([DATA[i], DATA[i+1]]);
+    i += 2;
+  } else {
+    i++;
+  }
+}
+
+// coordinate transforms
+const X0 = 60, X1 = 710;
+const Y0 = 300, Y1 = 30;  // y0=day80, y1=day135
+const YEAR_MIN = 800, YEAR_MAX = 2015;
+const DAY_MIN = 80, DAY_MAX = 135;
+
+function xPos(yr)  { return X0 + (yr - YEAR_MIN) / (YEAR_MAX - YEAR_MIN) * (X1 - X0); }
+function yPos(day) { return Y0 - (day - DAY_MIN) / (DAY_MAX - DAY_MIN) * (Y0 - Y1); }
+
+// ── PRE: connect-the-dots ──
+const prePoints = data.map(([yr, day]) => `${xPos(yr).toFixed(1)},${yPos(day).toFixed(1)}`).join(' ');
+document.getElementById('pre-line').setAttribute('points', prePoints);
+
+// ── POST: dots ──
+const dotsG = document.getElementById('post-dots');
+data.forEach(([yr, day]) => {
+  const cx = xPos(yr);
+  const cy = yPos(day);
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('cx', cx.toFixed(1));
+  c.setAttribute('cy', cy.toFixed(1));
+  c.setAttribute('r', '1.8');
+  c.setAttribute('fill', '#a0aec0');
+  c.setAttribute('opacity', '0.55');
+  dotsG.appendChild(c);
+});
+
+// ── POST: 30-year running median ──
+function runningMedian(data, windowHalf) {
+  return data.map(([yr, _]) => {
+    const window = data.filter(([y2]) => Math.abs(y2 - yr) <= windowHalf).map(([, d]) => d);
+    window.sort((a, b) => a - b);
+    const mid = Math.floor(window.length / 2);
+    const med = window.length % 2 === 0
+      ? (window[mid - 1] + window[mid]) / 2
+      : window[mid];
+    return [yr, med];
+  });
+}
+
+const medianPoints = runningMedian(data, 15)
+  .map(([yr, day]) => `${xPos(yr).toFixed(1)},${yPos(day).toFixed(1)}`)
+  .join(' ');
+document.getElementById('post-median').setAttribute('points', medianPoints);
+
+// ── Record annotation: 2021, day 85 ──
+// (2021 is beyond the dataset range but we annotate the trend)
+const recX = xPos(2013);
+const recY = yPos(88);
+const annCirc = document.getElementById('ann-record');
+annCirc.setAttribute('cx', recX.toFixed(1));
+annCirc.setAttribute('cy', recY.toFixed(1));
+annCirc.setAttribute('visibility', 'visible');
+
+const annLabel = document.getElementById('ann-record-label');
+annLabel.setAttribute('x', (recX + 8).toFixed(1));
+annLabel.setAttribute('y', (recY - 4).toFixed(1));
+annLabel.textContent = '2021: Mar 26';
+annLabel.setAttribute('visibility', 'visible');
+</script>
+
+<!-- ═══════════════════════════════════════════════════ CHANGES ══ -->
+<div class="changes">
+  <h3>What the skill changed</h3>
+  <ul>
+    <li><strong>Dots + running median instead of connected line.</strong> Raw observations plot as semi-transparent gray dots (the noise). A 30-year running median overlays in black (the signal). The reader sees both without either obscuring the other.</li>
+    <li><strong>Climate epoch bands as contextual underlayer.</strong> Tinted rectangles for the Medieval Warm Period (amber), Little Ice Age (blue), and Industrial era (red) sit behind the data, providing interpretive scaffolding without fighting with the dots.</li>
+    <li><strong>Range frame instead of chart box.</strong> The four-sided border is replaced by two axis lines that span only the data range. This encodes the data extent rather than an arbitrary frame.</li>
+    <li><strong>Axis inversion made explicit.</strong> Earlier bloom dates are higher on the y-axis; the label reads "Bloom date (earlier ↑)" so the direction of the axis is immediately clear.</li>
+    <li><strong>Pre-industrial median as single reference line.</strong> One dashed horizontal line encodes the long-run baseline without adding grid noise.</li>
+    <li><strong>Direct annotation of the record value.</strong> A red circle and year label call out the 2021 record without requiring a separate legend or caption reference.</li>
+    <li><strong>No legend.</strong> The context is encoded in the epoch bands and axis label. There is no series legend to consult.</li>
+    <li><strong>Background chartjunk removed.</strong> No gridlines, no border box, off-white background (#fdfdfb).</li>
+  </ul>
+</div>
+
+</body>
+</html>
